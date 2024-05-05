@@ -1,0 +1,74 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.decomposition import PCA
+
+# URL for the Iris dataset
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+
+# Define column names
+cls = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'Class']
+
+# Read the dataset
+dataset = pd.read_csv(url, names=cls)
+label1 = dataset.iloc[:, 0:4].values
+label2 = dataset.iloc[:, 4].values
+
+# Splitting the dataset into the Training set and Test set
+label1_train, label1_test, label2_train, label2_test = train_test_split(label1, label2, test_size=0.2, random_state=0)
+
+# Feature Scaling
+scaler = StandardScaler()
+label1_train = scaler.fit_transform(label1_train)
+label1_test = scaler.transform(label1_test)
+
+# Logistic Regression
+model = LogisticRegression(random_state=0)
+model.fit(label1_train, label2_train)
+prediction = model.predict(label1_test)
+
+# Confusion Matrix and Accuracy
+matrix = confusion_matrix(label2_test, prediction)
+print("Confusion Matrix (Logistic Regression):")
+print(matrix)
+score = accuracy_score(label2_test, prediction)
+print("Accuracy (Logistic Regression):", score)
+
+# LDA
+analysis = LDA(n_components=2)
+label1_train = analysis.fit_transform(label1_train, label2_train)
+label1_test = analysis.transform(label1_test)
+
+# Logistic Regression after LDA
+model = LogisticRegression(random_state=0)
+model.fit(label1_train, label2_train)
+prediction = model.predict(label1_test)
+
+# Confusion Matrix and Accuracy after LDA
+matrix = confusion_matrix(label2_test, prediction)
+print("\nConfusion Matrix (Logistic Regression after LDA):")
+print(matrix)
+score = accuracy_score(label2_test, prediction)
+print("Accuracy (Logistic Regression after LDA):", score)
+
+# PCA
+pca = PCA(n_components=2)
+label1_train = pca.fit_transform(label1_train, label2_train)
+label1_test = pca.transform(label1_test)
+
+# Logistic Regression after PCA
+model = LogisticRegression(random_state=0)
+model.fit(label1_train, label2_train)
+prediction = model.predict(label1_test)
+
+# Confusion Matrix and Accuracy after PCA
+matrix = confusion_matrix(label2_test, prediction)
+print("\nConfusion Matrix (Logistic Regression after PCA):")
+print(matrix)
+score = accuracy_score(label2_test, prediction)
+print("Accuracy (Logistic Regression after PCA):", score)
