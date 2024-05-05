@@ -1,0 +1,19 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+data = np.random.rand(1000,50)
+data_scaled = StandardScaler().fit_transform(data)
+pca = PCA(n_components =2)
+pca_components = pca.fit_transform(data_scaled)
+principal_df = pd.DataFrame(data=pca_components,columns=['principal component 1','principal component 2'])
+print('orignal shape',data.shape)
+print('reduced shape',principal_df.shape)
+plt.figure(figsize=(10,8))
+sns.scatterplot(x='principal component 1',y='principal component 2',data=principal_df)
+plt.title('PCA 2 component scatterplot')
+plt.xlabel('component 1')
+plt.ylabel('component 2')
+plt.show()
